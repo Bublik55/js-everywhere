@@ -1,3 +1,4 @@
+const	models = require('./models')
 const	express = require('express');
 const	{ ApolloServer, gql } = require('apollo-server-express');
 require('dotenv').config();
@@ -36,9 +37,11 @@ type Query {
 const	resolvers = {
 	Query: {
 		hello: () => `Hello World!`,
-		notes: () => notes,
 		note: (parent, args) => {
 			return notes.find(note =>note.id === args.id)
+		},
+		notes: async () => {
+			return await models.Note.find();
 		}
 	},
 
