@@ -3,12 +3,11 @@ const	{ ApolloServer, gql } = require('apollo-server-express');
 require('dotenv').config();
 
 const	db = require('./db');
+const	models = require('./models')
 
 const	port = process.env.PORT || 3030;
 
 const	DATABASE_URL = process.env.DATABASE_URL;
-console.log(DATABASE_URL);
-console.log(DATABASE_URL);
 
 let notes = [
 	{id: '1', content: 'This is a first node', author: 'Me'},
@@ -38,26 +37,26 @@ type Query {
 const	resolvers = {
 	Query: {
 		hello: () => `Hello World!`,
-		notes: () => notes,
-		note: (parent, args) => {
-			return notes.find(note =>note.id === args.id)
+		note: async (parent, args) => {
+			return await models.Nodte.findById(args.id)
+		},
+		notes: async () => {
+			return await models.Note.find();
 		}
 	},
 
 	Mutation: {
-		newNote: (parent, args) => {
-			let noteValue = {
-				id: String(notes.length + 1),
+		newNote: async (parent, args) => {
+			return await models.Note.create({
 				content: args.content,
-				author: 'Me'
-			};
-			notes.push(noteValue);
-			return noteValue;
+				author: 'Paul'
+			});
 		}
 	}
 };
 
 const	app = express();
+
 db.connect(DATABASE_URL);
 
 const server = new ApolloServer({typeDefs,resolvers});
