@@ -7,8 +7,6 @@ const	db = require('./db');
 const	port = process.env.PORT || 3030;
 
 const	DATABASE_URL = process.env.DATABASE_URL;
-console.log(DATABASE_URL);
-console.log(DATABASE_URL);
 
 let notes = [
 	{id: '1', content: 'This is a first node', author: 'Me'},
