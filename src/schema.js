@@ -9,7 +9,6 @@ module.exports = gql `
 		author: User!
 		createdAt: DateTime!
 		updatedAt: DateTime!
-
 	}
 
 	type User {
@@ -25,7 +24,6 @@ module.exports = gql `
 		note(id: ID!): Note!
 	}
 
-
 	type Mutation {
 		newNote(content: String!): Note!
 		updateNote(id: ID!, content: String!):Note!
@@ -34,6 +32,4 @@ module.exports = gql `
 		signUp(username: String!, email: String!, password: String!): String
 		signIn(username: String!, email: String!, password: String!): String
 	}
-
-
 `;
