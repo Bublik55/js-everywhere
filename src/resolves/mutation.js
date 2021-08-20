@@ -43,7 +43,7 @@ module.exports = {
 		if (!user) {
 			throw new AuthenticationError('U are not signed');
 		}
-		
+
 		const note = await models.Note.findById(id);
 		if (note && String(note.author) !== user.id) {
 			throw new ForbiddenError('U have no permissions to update it');
@@ -103,5 +103,45 @@ module.exports = {
 		}
 
 		return jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-	}
+	},
+	toggleFavorite: async (parent, { id }, { models, user }) => {
+		if (!user) {
+			throw new AuthenticationError("U must be signed for this action")
+		}
+		console.log(user);
+		let noteCheck = await models.Note.findById(id);
+		const hasUser = noteCheck.favoritedBy.indexOf(user.id);
+		if (hasUser >= 0) {
+			return await models.Note.findByIdAndUpdate(
+				id,
+				{
+					$pull: {
+						favoritedBy: mongoose.Types.ObjectId(user.id)
+					},
+					$inc: {
+						favoriteCount: -1
+					}
+				},
+				{
+					new: true
+				}
+			);
+		} else {
+			return await models.Note.findByIdAndUpdate(
+				id,
+				{
+					$push: {
+						favoritedBy: mongoose.Types.ObjectId(user.id)
+					},
+					$inc: {
+						favoriteCount: 1
+					}
+				},
+				{
+					new: true
+				}
+			)
+		};
+	},
+
 }
