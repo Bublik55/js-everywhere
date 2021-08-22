@@ -1,4 +1,5 @@
 const express = require('express');
+const { createComplexityLimiteRule } = require ('graphql-validation-complexity');
 const { ApolloServer } = require('apollo-server-express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -32,10 +33,10 @@ const getUser = token => {
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
+	validationRules: [deapthLimit(5), createComplexityLimiteRule(1000)],
 	context: ({ req }) => {
 		const token = req.headers.authorization;
 		const user = getUser(token);
-		console.log(user);
 		return { models, user }
 	}
 });
