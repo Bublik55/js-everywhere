@@ -6,7 +6,6 @@ const helmet = require('helmet');
 const cors = require('cors');
 require('dotenv').config();
 
-
 const db = require('./db');
 const models = require('./models')
 const typeDefs = require('./schema')
